@@ -51,7 +51,22 @@ func main() {
 
 	// Health check
 	r.GET("/health", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"status": "ok", "time": time.Now().UTC()})
+		dbStatus := "connected"
+		var dbErr string
+		if db.Pool == nil {
+			dbStatus = "disconnected"
+			if db.LastError != nil {
+				dbErr = db.LastError.Error()
+			} else {
+				dbErr = "database pool is uninitialized"
+			}
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"status":   "ok",
+			"database": dbStatus,
+			"db_error": dbErr,
+			"time":     time.Now().UTC(),
+		})
 	})
 
 	api := r.Group("/api/v1")
