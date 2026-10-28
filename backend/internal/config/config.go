@@ -16,6 +16,13 @@ type Config struct {
 	GeminiAPIKey       string
 	EmbeddingModel     string
 	DefaultTimezone    string
+	// Auth
+	JWTSecret          string
+	GoogleClientID     string
+	// Email (SendGrid)
+	SendGridAPIKey     string
+	SendGridFromEmail  string
+	SendGridFromName   string
 }
 
 func Load() *Config {
@@ -49,6 +56,11 @@ func Load() *Config {
 		GeminiAPIKey:       geminiKey,
 		EmbeddingModel:     embeddingModel,
 		DefaultTimezone:    tz,
+		JWTSecret:          getEnv("JWT_SECRET", "change-me-in-production"),
+		GoogleClientID:     getEnv("GOOGLE_CLIENT_ID", ""),
+		SendGridAPIKey:     getEnv("SENDGRID_API_KEY", ""),
+		SendGridFromEmail:  getEnv("SENDGRID_FROM_EMAIL", "noreply@histeeria.com"),
+		SendGridFromName:   getEnv("SENDGRID_FROM_NAME", "Histeeria Memory"),
 	}
 
 	if cfg.DatabaseURL == "" {

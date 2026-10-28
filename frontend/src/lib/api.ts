@@ -26,14 +26,10 @@ export async function apiFetch(path: string, options: RequestInit = {}) {
 }
 
 export const auth = {
-  register: (data: any) => apiFetch('/auth/register', { method: 'POST', body: JSON.stringify(data) }),
-  login: (data: any) => apiFetch('/auth/login', { method: 'POST', body: JSON.stringify(data) }),
-  google: (data: any) => apiFetch('/auth/google', { method: 'POST', body: JSON.stringify(data) }),
   sendOTP: (data: any) => apiFetch('/auth/send-otp', { method: 'POST', body: JSON.stringify(data) }),
   verifyOTP: (data: any) => apiFetch('/auth/verify-otp', { method: 'POST', body: JSON.stringify(data) }),
-  forgotPassword: (data: any) => apiFetch('/auth/forgot-password', { method: 'POST', body: JSON.stringify(data) }),
-  resetPassword: (data: any) => apiFetch('/auth/reset-password', { method: 'POST', body: JSON.stringify(data) }),
-  signout: () => apiFetch('/auth/signout', { method: 'POST' }).catch(() => apiFetch('/profile/signout', { method: 'POST' })),
+  google: (data: any) => apiFetch('/auth/google', { method: 'POST', body: JSON.stringify(data) }),
+  signout: () => { localStorage.removeItem('histeeria_token'); window.location.href = '/auth/login'; },
 };
 
 export const memories = {
