@@ -1,0 +1,1 @@
+# Histeeria Backend (Go + Gin)
