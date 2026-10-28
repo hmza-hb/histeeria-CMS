@@ -56,9 +56,11 @@ func main() {
 
 	api := r.Group("/api/v1")
 
-	// Auth routes (public)
+	// Auth routes (public) - registered under /api/v1, /api, and / for full flexibility
 	authHandler := handlers.NewAuthHandler()
 	authHandler.RegisterRoutes(api)
+	authHandler.RegisterRoutes(r.Group("/api"))
+	authHandler.RegisterRoutes(r.Group(""))
 
 	// Protected routes
 	protected := api.Group("")

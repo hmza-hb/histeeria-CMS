@@ -1,4 +1,20 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v1';
+function getApiBase(): string {
+  let url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v1';
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    url = 'https://' + url;
+  }
+  url = url.replace(/\/+$/, '');
+  if (!url.endsWith('/api/v1')) {
+    if (url.endsWith('/api')) {
+      url = `${url}/v1`;
+    } else {
+      url = `${url}/api/v1`;
+    }
+  }
+  return url;
+}
+
+const API_BASE = getApiBase();
 
 function getToken() {
   if (typeof window === 'undefined') return null;
@@ -19,8 +35,15 @@ export async function apiFetch(path: string, options: RequestInit = {}) {
     headers,
   });
   if (!res.ok) {
-    const text = await res.text();
-    throw new Error(text || res.statusText);
+    let errMsg = res.statusText;
+    try {
+      const data = await res.json();
+      errMsg = data.error || data.message || JSON.stringify(data);
+    } catch {
+      const text = await res.text();
+      if (text) errMsg = text;
+    }
+    throw new Error(errMsg);
   }
   return res.json();
 }

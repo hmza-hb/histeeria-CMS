@@ -33,8 +33,8 @@ function LoginForm() {
       setStep('otp');
       setResendCooldown(60);
       setTimeout(() => inputRefs.current[0]?.focus(), 100);
-    } catch {
-      setError('Failed to send code. Please check your email and try again.');
+    } catch (err: any) {
+      setError(err?.message || 'Failed to send code. Please check your email and try again.');
     } finally {
       setLoading(false);
     }
@@ -52,8 +52,8 @@ function LoginForm() {
         localStorage.setItem('histeeria_token', res.token);
         window.location.href = '/';
       }
-    } catch {
-      setError('Invalid or expired code. Please try again.');
+    } catch (err: any) {
+      setError(err?.message || 'Invalid or expired code. Please try again.');
       setOtp(['', '', '', '', '', '']);
       setTimeout(() => inputRefs.current[0]?.focus(), 100);
     } finally {
@@ -100,8 +100,8 @@ function LoginForm() {
           localStorage.setItem('histeeria_token', res.token);
           window.location.href = '/';
         }
-      } catch {
-        setError('Google sign-in failed. Please try again.');
+      } catch (err: any) {
+        setError(err?.message || 'Google sign-in failed. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -152,7 +152,7 @@ function LoginForm() {
               <div className="relative mb-5">
                 <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-200" /></div>
                 <div className="relative flex justify-center text-xs uppercase tracking-wider">
-                  <span className="bg-white px-3 text-slate-400 font-medium">Or sign in with email</span>
+                  <span className="bg-white px-3 text-slate-400 font-medium">Or continue with email</span>
                 </div>
               </div>
 
@@ -167,6 +167,11 @@ function LoginForm() {
                   <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required
                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 transition-all text-sm" />
                 </div>
+
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Enter your email to sign in or create an account. We&apos;ll send a 6-digit one-time code — no password needed.
+                </p>
+
                 <button type="submit" disabled={loading || !email}
                   className="w-full mt-1 py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-medium text-sm transition-all shadow-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
                   {loading ? (
